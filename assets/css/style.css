@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+#city-form .form-control {
+    margin: 7px 0;
+}
+#city-form label {
+    font-size: 20px;
+}
+.weather-display {
+    border: 1px solid #000;
+}

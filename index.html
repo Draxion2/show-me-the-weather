@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- bootstrap init -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>Show Me the Weather</title>
+</head>
+<body>
+
+    <!-- jumbotron start -->
+    <header>
+        <div class="jumbotron">
+            <h1 class="display-4 text-center">Show Me the Weather</h1>
+            <p class="lead text-center">Type in the city you want and the weather will be displayed!</p>
+        </div>
+    </header>
+    <!-- jumbotron end -->
+
+    <!-- main start -->
+    <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-6">
+
+            <!-- city form start -->
+            <form id="city-form">
+                <div class="form-group">
+                    <label class="font-weight-bold" for="city">Search for a city</label>
+                    <input 
+                        class="form-control"
+                        type="text"
+                        name="city"
+                        id="city"
+                        placeholder="Salt Lake City"
+                    >
+                    <input
+                        class="form-control"
+                        type="submit"
+                        name="submit-city"
+                        id="submit-city"
+                    >
+                </div>
+            </form>
+            <!-- city form end -->
+
+          </div>
+          <div class="col-lg-9 col-md-6 border">
+            Weather will be displayed here!
+          </div>
+        </div>
+    </div>
+    <!-- main end -->
+    
+    <!-- jquery init -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="./assets/js/script.js"></script>
+</body>
+</html>
