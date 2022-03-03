@@ -1,10 +1,42 @@
+:root {
+    --primary: #344a5a;
+    --secondary: #529ba8;
+    --tertiary: #69d1e9;
+    --border-primary: #8baa71;
+    --border-secondary: #ecebe0;
+    --white: #fff;
+    --black: #000;
+}
+
+/* universal selectors */
 body {
     margin: 0;
     padding: 0;
+    background-color: #eee;
 }
+
+/* jumbotron start */
+.jumbotron {
+    background: #38b0de;
+    background: -moz-linear-gradient(-45deg, #38b0de 15%, #529ba8 50%, #f7f179 100%);
+    background: -webkit-linear-gradient(-45deg, #38b0de 15%,#529ba8 50%,#f7f179 100%);
+    background: linear-gradient(135deg, #38b0de 15%,#529ba8 50%,#f7f179 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#38b0de', endColorstr='#f7f179',GradientType=1 );
+    color: var(--white);
+    border-bottom: 5px solid var(--border-primary);
+}
+
+.lead {
+    background-color: var(--primary);
+    padding: 5px;
+}
+/* jumbotron end */
+
+/* city form start */
 #city-form .form-control {
     margin: 7px 0;
 }
 #city-form label {
     font-size: 20px;
 }
+/* city form end */
