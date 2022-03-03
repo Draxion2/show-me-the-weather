@@ -35,6 +35,15 @@ var displayFiveDays = function(lat, lon) {
 city_submit.click(function(event) {
     event.preventDefault();
 
+    // error handler
+    if (!city_input.val()) {
+        city_submit.after("<p class='error-handle' style='color:red'>Please provide a valid city!</p>");
+        setTimeout(function() {
+            $(".error-handle").remove();
+        }, 1000);
+        return;
+    }
+
     // save city
     var city = city_input.val().trim();
 
