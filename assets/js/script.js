@@ -10,11 +10,25 @@ var jumbo = $(".jumbotron"),
 // config moment js
 var currentDate = moment().format("dddd, MMMM Do YYYY");
 
+// handle input error
+var errorHandle = function() {
+    city_submit.after(
+        "<p class='error-handle' style='color:red'>Please provide a valid city!</p>"
+    );
+    setTimeout(function() {
+        $(".error-handle").remove();
+    }, 1000);
+}
+
 // display 5-day weather forecast
 var displayFiveDays = function(lat, lon) {
 
     // config api url
-    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?cnt=" + days + "&lat=" + lat + "&lon=" + lon + "&appid=" + api_key;
+    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?cnt=" +
+        days + "&lat=" +
+        lat + "&lon=" +
+        lon + "&appid=" +
+        api_key;
 
     // make a get request
     $.ajax({
@@ -37,10 +51,7 @@ city_submit.click(function(event) {
 
     // error handler
     if (!city_input.val()) {
-        city_submit.after("<p class='error-handle' style='color:red'>Please provide a valid city!</p>");
-        setTimeout(function() {
-            $(".error-handle").remove();
-        }, 1000);
+        errorHandle();
         return;
     }
 
@@ -48,7 +59,9 @@ city_submit.click(function(event) {
     var city = city_input.val().trim();
 
     // apply api url
-    var api_url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + api_key;
+    var api_url = "https://api.openweathermap.org/data/2.5/weather?q=" +
+        city + "&units=imperial&appid=" +
+        api_key;
 
     // make a get request
     $.ajax({
@@ -67,6 +80,7 @@ city_submit.click(function(event) {
             console.log(response);
             weather_display.text(
                 response.name + " " +
+                currentDate + " " +
                 response.main.temp + " " +
                 response.wind.speed + " " +
                 response.main.humidity + " " +
@@ -74,6 +88,7 @@ city_submit.click(function(event) {
             );
         },
         error: function(status, err) {
+            errorHandle();
             console.log("ERROR: " + status, err);
         }
     });
