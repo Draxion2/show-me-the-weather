@@ -55,6 +55,13 @@ body {
     color: var(--white);
     transition: all 300ms;
 }
+.item {
+    list-style: none;
+    background-color: var(--tertiary);
+    width: 325px;
+    margin-left: -35px;
+    padding: 5px;
+}
 /* city form end */
 
 /* weather forecast start */

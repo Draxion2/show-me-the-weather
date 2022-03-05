@@ -2,10 +2,12 @@
 var jumbo = $(".jumbotron"),
     city_input = $("#city"),
     city_submit = $("#submit-city"),
+    prevSearches = $("#prevSearches"),
     weather_display = $("#weather-forecast"),
     week_forecast = $("#five-forecast"),
     days = "5",
-    api_key = "5f4daa4b1c6da4effe6b7b5351622fef";
+    api_key = "5f4daa4b1c6da4effe6b7b5351622fef",
+    index = 1;
 
 
 // config weather variables
@@ -19,6 +21,18 @@ var city_name = $("#city-name"),
 
 // config moment js
 var currentDate = moment().format("dddd, MMMM Do YYYY");
+
+// upload previous searches
+var loadPrevSearches = function() {
+    if (!localStorage.getItem("city_" + index)) {
+        return;
+    } else {
+        for (var i = 1; i <= index; i++) {
+            var item = JSON.parse(localStorage.getItem("city_" + index));
+            $("<li class='item'>" + item + "</li>").appendTo(prevSearches);
+        }
+    }
+}
 
 // handle input error
 var errorHandle = function() {
@@ -131,6 +145,13 @@ city_submit.click(function(event) {
     // save city
     var city = city_input.val().trim();
 
+    // save in local storage
+    var cityItem = {
+        name: city,
+        id: index
+    }
+    localStorage.setItem("city", JSON.stringify(cityItem));
+
     // apply api url
     var api_url = "https://api.openweathermap.org/data/2.5/weather?q=" +
         city + "&units=imperial&appid=" +
@@ -167,3 +188,4 @@ city_submit.click(function(event) {
 
 
 // load previous searches
+loadPrevSearches();
