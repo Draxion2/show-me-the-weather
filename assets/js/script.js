@@ -7,6 +7,16 @@ var jumbo = $(".jumbotron"),
     days = "5",
     api_key = "5f4daa4b1c6da4effe6b7b5351622fef";
 
+
+// config weather variables
+var city_name = $("#city-name"),
+    city_weather = $("#city-weather"),
+    city_temp = $("#city-temp"),
+    city_wind = $("#city-wind"),
+    city_humid = $("#city-humid"),
+    city_index = $("#city-index");
+
+
 // config moment js
 var currentDate = moment().format("dddd, MMMM Do YYYY");
 
@@ -45,6 +55,61 @@ var displayFiveDays = function(lat, lon) {
     });
 }
 
+var getUvi = function(lat, lon) {
+
+    // config api url
+    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" +
+    lat + "&lon=" +
+    lon + "&exclude=minutely,hourly,daily&appid=" +
+    api_key;
+
+    // make a get request
+    $.ajax({
+        url: apiUrl,
+        type: "GET",
+        dataType: "json",
+        success: function(response) {
+            var uvi = response.current.uvi;
+            console.log(response);
+            city_index.html("UV Index: <span id='uvi'>" + uvi + "</span>");
+
+            // change color according to value
+            if (uvi < 2) {
+                $("#uvi").css({
+                    backgroundColor: "green",
+                    padding: "5px 20px"
+                });
+            } else if (uvi > 2 && uvi < 6) {
+                $("#uvi").css({
+                    backgroundColor: "yellow",
+                    padding: "5px 20px",
+                    color: "black"
+                });
+            } else if (uvi > 5 && uvi < 8) {
+                $("#uvi").css({
+                    backgroundColor: "orange",
+                    padding: "5px 20px",
+                    color: "black"
+                });
+            } else if (uvi > 7 && uvi < 11) {
+                $("#uvi").css({
+                    backgroundColor: "red",
+                    padding: "5px 20px",
+                });
+            } else {
+                $("#uvi").css({
+                    backgroundColor: "pink",
+                    padding: "5px 20px",
+                    color: "black"
+                });
+            }
+        },
+        error: function(status, err) {
+            console.log("ERROR: " + status, err);
+        }
+    });
+}
+
 // submit city search
 city_submit.click(function(event) {
     event.preventDefault();
@@ -72,20 +137,19 @@ city_submit.click(function(event) {
 
             // config responses
             var lat = response.coord.lat,
-                lon = response.coord.lon;
+                lon = response.coord.lon,
+                icon = response.weather[0].icon;
 
             // call displayFiveDays
             displayFiveDays(lat, lon);
 
             console.log(response);
-            weather_display.text(
-                response.name + " " +
-                currentDate + " " +
-                response.main.temp + " " +
-                response.wind.speed + " " +
-                response.main.humidity + " " +
-                response.weather[0].main
-            );
+            city_name.text(response.name + " (" + currentDate + ")");
+            city_weather.html(response.weather[0].main + " <img src='https://openweathermap.org/img/w/" + icon + ".png'>");
+            city_temp.text("Temp: " + Math.round(response.main.temp) + "°F (H: " + Math.round(response.main.temp_max) + " L: " + Math.round(response.main.temp_min) + ")");
+            city_wind.text("Wind: " + response.wind.speed + " MPH");
+            city_humid.text("Humidity: " + response.main.humidity + "%");
+            getUvi(lat, lon);
         },
         error: function(status, err) {
             errorHandle();

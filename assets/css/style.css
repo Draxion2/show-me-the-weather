@@ -43,6 +43,9 @@ body {
     padding: 5px 5px 5px 10px;
     color: var(--white);
 }
+#city {
+    border: 1px solid #000;
+}
 #city-form input[type="submit"] {
     transition: all 300ms;
     font-weight: bold;
@@ -53,3 +56,11 @@ body {
     transition: all 300ms;
 }
 /* city form end */
+
+/* weather forecast start */
+#weather-forecast {
+    background-color: var(--secondary);
+    color: var(--white);
+    height: 400px;
+}
+/* weather forecast end */
