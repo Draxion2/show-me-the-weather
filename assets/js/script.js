@@ -3,7 +3,7 @@ var jumbo = $(".jumbotron"),
     city_input = $("#city"),
     city_submit = $("#submit-city"),
     weather_display = $("#weather-forecast"),
-    week_forecast = $("#week-forecast"),
+    week_forecast = $("#five-forecast"),
     days = "5",
     api_key = "5f4daa4b1c6da4effe6b7b5351622fef";
 
@@ -34,7 +34,7 @@ var errorHandle = function() {
 var displayFiveDays = function(lat, lon) {
 
     // config api url
-    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?cnt=" +
+    var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?units=imperial&cnt=" +
         days + "&lat=" +
         lat + "&lon=" +
         lon + "&appid=" +
@@ -47,7 +47,16 @@ var displayFiveDays = function(lat, lon) {
         dataType: "json",
         success: function(response) {
             console.log(response);
-            week_forecast.text(response.list[0]);
+            for (var i = 0; i < response.list.length; i++) {
+                var buildDiv = '<div class="day col-lg-2 col-md-6">' +
+                response.list[i].dt_txt+'<br><img src="https://openweathermap.org/img/w/' +
+                response.list[i].weather[0].icon + '.png"><br>Temp: ' +
+                Math.round(response.list[i].main.temp) + ' °F<br>Wind: ' +
+                response.list[i].wind.speed + ' MPH<br>Humidity: ' +
+                response.list[i].main.humidity + ' %</div>';
+                buildDiv=+
+                week_forecast.append(buildDiv);
+            }
         },
         error: function(status, err) {
             console.log("ERROR: " + status, err);
@@ -70,7 +79,6 @@ var getUvi = function(lat, lon) {
         dataType: "json",
         success: function(response) {
             var uvi = response.current.uvi;
-            console.log(response);
             city_index.html("UV Index: <span id='uvi'>" + uvi + "</span>");
 
             // change color according to value
@@ -143,7 +151,6 @@ city_submit.click(function(event) {
             // call displayFiveDays
             displayFiveDays(lat, lon);
 
-            console.log(response);
             city_name.text(response.name + " (" + currentDate + ")");
             city_weather.html(response.weather[0].main + " <img src='https://openweathermap.org/img/w/" + icon + ".png'>");
             city_temp.text("Temp: " + Math.round(response.main.temp) + "°F (H: " + Math.round(response.main.temp_max) + " L: " + Math.round(response.main.temp_min) + ")");
