@@ -60,7 +60,12 @@ body {
     background-color: var(--tertiary);
     width: 325px;
     margin-left: -35px;
+    margin-top: 5px;
     padding: 5px;
+}
+.item:hover {
+    background-color: var(--white);
+    cursor: pointer;
 }
 /* city form end */
 

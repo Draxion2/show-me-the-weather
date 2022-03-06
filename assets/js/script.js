@@ -18,19 +18,23 @@ var city_name = $("#city-name"),
     city_humid = $("#city-humid"),
     city_index = $("#city-index");
 
+// config previous searches
+var prevSearchesList = [];
 
 // config moment js
 var currentDate = moment().format("dddd, MMMM Do YYYY");
 
-// upload previous searches
+// load previous searches
 var loadPrevSearches = function() {
-    if (!localStorage.getItem("city_" + index)) {
-        return;
-    } else {
-        for (var i = 1; i <= index; i++) {
-            var item = JSON.parse(localStorage.getItem("city_" + index));
-            $("<li class='item'>" + item + "</li>").appendTo(prevSearches);
-        }
+    var history = JSON.parse(localStorage.getItem("city"));
+    prevSearchesList = history;
+    localStorage.setItem("city", JSON.stringify(prevSearchesList));
+}
+
+// create the previous searches list
+var createSearches = function() {
+    for (var i = 0; i < prevSearchesList.length; i++) {
+        prevSearches.append("<li class='item'>" + prevSearchesList[i] + "</li>");
     }
 }
 
@@ -145,12 +149,11 @@ city_submit.click(function(event) {
     // save city
     var city = city_input.val().trim();
 
-    // save in local storage
-    var cityItem = {
-        name: city,
-        id: index
+    if (!prevSearchesList.includes(city)) {
+        prevSearchesList.push(city);
+        localStorage.setItem("city", JSON.stringify(prevSearchesList));
+        loadPrevSearches();
     }
-    localStorage.setItem("city", JSON.stringify(cityItem));
 
     // apply api url
     var api_url = "https://api.openweathermap.org/data/2.5/weather?q=" +
@@ -186,6 +189,6 @@ city_submit.click(function(event) {
     });
 });
 
-
 // load previous searches
 loadPrevSearches();
+createSearches();
