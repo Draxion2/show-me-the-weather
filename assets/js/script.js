@@ -26,6 +26,9 @@ var currentDate = moment().format("dddd, MMMM Do YYYY");
 
 // load previous searches
 var loadPrevSearches = function() {
+    if (localStorage.getItem("city") === null) {
+        return;
+    }
     var history = JSON.parse(localStorage.getItem("city"));
     prevSearchesList = history;
     localStorage.setItem("city", JSON.stringify(prevSearchesList));
@@ -33,8 +36,11 @@ var loadPrevSearches = function() {
 
 // create the previous searches list
 var createSearches = function() {
+    if (prevSearchesList === null) {
+        return;
+    }
     for (var i = 0; i < prevSearchesList.length; i++) {
-        prevSearches.append("<li class='item'>" + prevSearchesList[i] + "</li>");
+        prevSearches.append("<li data-city='"+ prevSearchesList[i].toLowerCase() + "' class='item'>" + prevSearchesList[i] + "</li>");
     }
 }
 
@@ -50,6 +56,9 @@ var errorHandle = function() {
 
 // display 5-day weather forecast
 var displayFiveDays = function(lat, lon) {
+
+    // empty before loading
+    week_forecast.empty();
 
     // config api url
     var apiUrl = "https://api.openweathermap.org/data/2.5/forecast?units=imperial&cnt=" +
@@ -192,3 +201,45 @@ city_submit.click(function(event) {
 // load previous searches
 loadPrevSearches();
 createSearches();
+
+// add event listener to previous searches
+$(document).ready(function() {
+    $("li.item").click(function(event) {
+        event.preventDefault();
+
+        var data = $(this).attr("data-city");
+
+        // apply api url
+        var api_url = "https://api.openweathermap.org/data/2.5/weather?q=" +
+            data + "&units=imperial&appid=" +
+            api_key;
+
+        // make a get request
+        $.ajax({
+            url: api_url,
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+
+                // config responses
+                var lat = response.coord.lat,
+                    lon = response.coord.lon,
+                    icon = response.weather[0].icon;
+
+                // call displayFiveDays
+                displayFiveDays(lat, lon);
+
+                city_name.text(response.name + " (" + currentDate + ")");
+                city_weather.html(response.weather[0].main + " <img src='https://openweathermap.org/img/w/" + icon + ".png'>");
+                city_temp.text("Temp: " + Math.round(response.main.temp) + "°F (H: " + Math.round(response.main.temp_max) + " L: " + Math.round(response.main.temp_min) + ")");
+                city_wind.text("Wind: " + response.wind.speed + " MPH");
+                city_humid.text("Humidity: " + response.main.humidity + "%");
+                getUvi(lat, lon);
+            },
+            error: function(status, err) {
+                errorHandle();
+                console.log("ERROR: " + status, err);
+            }
+        });
+    });
+});
